@@ -12,7 +12,6 @@ public class DroneController : MonoBehaviour
 
     [Header("Thrust")]
     public float defaultThrustRotor = 2;
-
     public float currentThrustRotorFrontLeft = 2;
     public float currentThrustRotorFrontRight = 2;
     public float currentThrustRotorRearLeft = 2;
@@ -20,8 +19,13 @@ public class DroneController : MonoBehaviour
 
     public float thrustInputValueUp = 10;
     public float thrustInputValueDirection = 10;
+
     [Range(0f,1f)]
     public float thrustMultiplicator = 0.9f;
+
+    public float rotateSpeed = 50f;
+
+    public bool stabilise = false;
 
     private Rigidbody rb;
 
@@ -41,19 +45,46 @@ public class DroneController : MonoBehaviour
     void Update()
     {
         // Simplified controls
-        if(Input.GetKey(KeyCode.Space)) {
+        if (Input.GetKey(KeyCode.Space)) 
+        {
             SetRotorsThrustTo(thrustInputValueUp);
-        }else if(Input.GetKey(KeyCode.UpArrow)) {
+        } 
+        else if (Input.GetKey(KeyCode.UpArrow)) 
+        {
             Forward();
-        }else if(Input.GetKey(KeyCode.DownArrow)) {
+        } 
+        else if (Input.GetKey(KeyCode.DownArrow)) 
+        {
             Backwards();
-        }else if(Input.GetKey(KeyCode.LeftArrow)) {
+        } 
+        else if (Input.GetKey(KeyCode.LeftArrow)) 
+        {
             Left();
-        }else if(Input.GetKey(KeyCode.RightArrow)) {
+        } 
+        else if (Input.GetKey(KeyCode.RightArrow)) 
+        {
             Right();
-        }else {
+        } 
+        else if (stabilise)
+        {
+            
+            StabiliseDrone();
+        }
+        else {
             ResetThrust();
         }
+
+
+        // Turning
+        if (Input.GetKey(KeyCode.Y))
+        {
+            Rotate(rotateSpeed);
+        }
+        else if (Input.GetKey(KeyCode.X)) 
+        {
+            Rotate(-rotateSpeed);
+        }
+
 
         /* 
          // Manual controls
@@ -116,6 +147,35 @@ public class DroneController : MonoBehaviour
     {
         SetRotorThrust("frontLeft");
         SetRotorThrust("rearLeft");
+    }
+
+    private void Rotate(float speed)
+    {
+        this.transform.Rotate(this.transform.up, speed * Time.deltaTime, Space.Self);
+    }
+
+    private void StabiliseDrone()
+    {
+        Vector3 rotation = this.gameObject.transform.rotation.eulerAngles;
+        // x-axis
+        if (rotation[0] > 0){
+            Debug.Log("Correcting to the Front");
+            Forward();
+        }else if (rotation[0] < 0){
+            Debug.Log("Correcting Backwards");
+            Backwards();
+        }else {
+            currentThrustRotorFrontLeft
+        }
+
+        // z-axis
+        if (rotation[2] > 0){
+            Debug.Log("Correcting to the Right");
+            Right();
+        }else if (rotation[2] < 0){
+            Debug.Log("Correcting to the Left");
+            Left();
+        }
     }
 
     private void SetRotorThrust (string rotor)

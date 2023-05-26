@@ -415,6 +415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03919da606ebc42f99b790a76137ce9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drone: {fileID: 0}
   rotorFrontLeft: {fileID: 1995225165}
   rotorFrontRight: {fileID: 29387784}
   rotorRearLeft: {fileID: 1567307934}
@@ -427,6 +428,7 @@ MonoBehaviour:
   thrustInputValueUp: 4
   thrustInputValueDirection: 4
   thrustMultiplicator: 0.9
+  rotateSpeed: 50
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
