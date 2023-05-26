@@ -12,17 +12,16 @@ public class DroneController : MonoBehaviour
 
     [Header("Thrust")]
     public float defaultThrustRotor = 2;
+    public float idleThrust = 2.45f;
     public float currentThrustRotorFrontLeft = 2;
     public float currentThrustRotorFrontRight = 2;
     public float currentThrustRotorRearLeft = 2;
     public float currentThrustRotorRearRight = 2;
 
-    public float thrustInputValueUp = 10;
-    public float thrustInputValueDirection = 10;
-
+    public float thrustInputValueUp = 4;
+    public float thrustInputValueDirection = 3;
     [Range(0f,1f)]
-    public float thrustMultiplicator = 0.9f;
-
+    public float thrustMultiplicator = 0.925f;
     public float rotateSpeed = 50f;
 
     public bool stabilise = false;
@@ -45,11 +44,7 @@ public class DroneController : MonoBehaviour
     void Update()
     {
         // Simplified controls
-        if (Input.GetKey(KeyCode.Space)) 
-        {
-            SetRotorsThrustTo(thrustInputValueUp);
-        } 
-        else if (Input.GetKey(KeyCode.UpArrow)) 
+        if (Input.GetKey(KeyCode.UpArrow)) 
         {
             Forward();
         } 
@@ -65,15 +60,20 @@ public class DroneController : MonoBehaviour
         {
             Right();
         } 
-        else if (stabilise)
+        else if (Input.GetKey(KeyCode.I)) 
         {
-            
+            SetRotorsThrustTo(idleThrust);
+        } 
+        else
+        {
             StabiliseDrone();
+            // ResetThrust();
         }
-        else {
-            ResetThrust();
-        }
-
+        
+        if (Input.GetKey(KeyCode.Space)) 
+        {
+            SetRotorsThrustTo(thrustInputValueUp);
+        } 
 
         // Turning
         if (Input.GetKey(KeyCode.Y))
@@ -115,7 +115,7 @@ public class DroneController : MonoBehaviour
         */
     }
 
-    public void SetRotorsThrustTo(float thrust)
+    private void SetRotorsThrustTo(float thrust)
     {
         currentThrustRotorFrontLeft = currentThrustRotorFrontRight = currentThrustRotorRearLeft = currentThrustRotorRearRight = thrust;
     }
@@ -153,28 +153,42 @@ public class DroneController : MonoBehaviour
     {
         this.transform.Rotate(this.transform.up, speed * Time.deltaTime, Space.Self);
     }
-
+    
     private void StabiliseDrone()
     {
-        Vector3 rotation = this.gameObject.transform.rotation.eulerAngles;
+        Quaternion rotation = this.gameObject.transform.rotation;
+        
+        ResetThrust();
+        
         // x-axis
-        if (rotation[0] > 0){
-            Debug.Log("Correcting to the Front");
-            Forward();
-        }else if (rotation[0] < 0){
-            Debug.Log("Correcting Backwards");
-            Backwards();
-        }else {
-            currentThrustRotorFrontLeft
+        switch (rotation[0])
+        {
+            case > 0.001f:
+                // Debug.Log("Correcting Backwards");
+                currentThrustRotorFrontLeft = currentThrustRotorFrontRight = 1 + (4 * rotation[0]);
+                currentThrustRotorRearLeft = currentThrustRotorRearRight = 1 - (4 * rotation[0]);
+                
+                break;
+            case < -0.001f:
+                // Debug.Log("Correcting to the Front");
+                currentThrustRotorFrontLeft = currentThrustRotorFrontRight = 1 - (-4 * rotation[0]);
+                currentThrustRotorRearLeft = currentThrustRotorRearRight = 1 + (-4 * rotation[0]);
+                break;
         }
 
         // z-axis
-        if (rotation[2] > 0){
-            Debug.Log("Correcting to the Right");
-            Right();
-        }else if (rotation[2] < 0){
-            Debug.Log("Correcting to the Left");
-            Left();
+        switch (rotation[2])
+        {
+            case > 0.001f:
+                // Debug.Log("Correcting to the Right");
+                currentThrustRotorFrontLeft = currentThrustRotorRearLeft = 1 + (4 * rotation[2]);
+                currentThrustRotorFrontRight = currentThrustRotorRearRight = 1 - (4 * rotation[2]);
+                break;
+            case < -0.001f:
+                // Debug.Log("Correcting to the Left");
+                currentThrustRotorFrontLeft = currentThrustRotorRearLeft = 1 - (-4 * rotation[2]);
+                currentThrustRotorRearRight = currentThrustRotorFrontRight = 1 + (-4 * rotation[2]);
+                break;
         }
     }
 
