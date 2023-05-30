@@ -66,8 +66,10 @@ public class DroneController : MonoBehaviour
         } 
         else
         {
-            StabiliseDrone();
-            // ResetThrust();
+            if(stabilise) 
+                StabiliseDrone();
+            else
+                ResetThrust();
         }
         
         if (Input.GetKey(KeyCode.Space)) 
@@ -78,11 +80,11 @@ public class DroneController : MonoBehaviour
         // Turning
         if (Input.GetKey(KeyCode.Y))
         {
-            Rotate(rotateSpeed);
+            Rotate(-rotateSpeed);
         }
         else if (Input.GetKey(KeyCode.X)) 
         {
-            Rotate(-rotateSpeed);
+            Rotate(rotateSpeed);
         }
 
 
