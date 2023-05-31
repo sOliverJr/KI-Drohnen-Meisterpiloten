@@ -1,0 +1,29 @@
+{
+    "Fly": {
+        "checkpoints": [
+            {
+                "steps": 37971,
+                "file_path": "results/fly_training/Fly/Fly-37971.onnx",
+                "reward": -400.91297720066797,
+                "creation_time": 1685618663.1410828,
+                "auxillary_file_paths": [
+                    "results/fly_training/Fly/Fly-37971.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 37971,
+            "file_path": "results/fly_training/Fly.onnx",
+            "reward": -400.91297720066797,
+            "creation_time": 1685618663.1410828,
+            "auxillary_file_paths": [
+                "results/fly_training/Fly/Fly-37971.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.11.0"
+    }
+}

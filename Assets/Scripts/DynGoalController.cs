@@ -2,37 +2,44 @@ using UnityEngine;
 
 public class DynGoalController : MonoBehaviour
 {
-    public static DynGoalController Instance;
     public GameObject goal;
-    private GameObject _currentGoal;
+    public GameObject goalCenter;
+    public GameObject currentGoal;
 
-    public void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-    }
+    public bool useStaticGoal;
+    public GameObject staticGoal;
+    
     void Start()
     {
-        SpawnNewGoal();
+        /* 
+        if (useStaticGoal)
+            currentGoal = staticGoal;
+        else
+        {
+            RandomiseGoalPosition();
+            // goal.SetActive(false);
+        }
+        */
+        
+        RandomiseGoalPosition();
+        currentGoal = goal;
     }
 
-    public void SpawnNewGoal()
+    public void RandomiseGoalPosition()
     {
         // int randomHeight = Random.Range(15, 30);
         // int randomX = Random.Range(-25, 25);
         // int randomZ = Random.Range(-25, 25);
-        int randomHeight = Random.Range(18, 25);
-        int randomX = Random.Range(-4, 4);
-        int randomZ = Random.Range(-4, 4);
+        int randomX = Random.Range(-45, 45);
+        int randomY = Random.Range(0, 359);
 
-        _currentGoal = Instantiate(goal, new Vector3(randomX, randomHeight, randomZ), new Quaternion(0, 0, 0, 1));
+        goalCenter.transform.rotation = Quaternion.Euler(randomX, randomY, 0f);
+        // currentGoal = Instantiate(goal, goal.transform.position,  Quaternion.Euler(randomX, randomY, 0));
     }
     
     
     public void DeleteGoal()
     {
-        Destroy(_currentGoal);
+        Destroy(currentGoal);
     }
 }

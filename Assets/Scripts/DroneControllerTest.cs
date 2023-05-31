@@ -1,3 +1,5 @@
+using System;
+using Unity.Barracuda;
 using UnityEngine;
 
 public class DroneControllerTest : MonoBehaviour
@@ -18,34 +20,30 @@ public class DroneControllerTest : MonoBehaviour
 
     void Start()
     {
-        rb = this.GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    void FixedUpdate() 
+    public void Rotate(float speed)
     {
-    }
-    
-    private void Rotate(float speed)
-    {
-        this.transform.Rotate(this.transform.up, speed * Time.deltaTime, Space.Self);
+        transform.Rotate(transform.up, speed * rotateSpeed * Time.deltaTime, Space.Self);
     }
 
     // Agent Controls
-    public void FrontLeftRotor(int running)
+    public void FrontLeftRotor(float thrust)
     {
-        rb.AddForceAtPosition(this.gameObject.transform.up * running * thrustInputValue, rotorFrontLeft.position);
+        rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorFrontLeft.position);
     }
-    public void FrontRightRotor(int running)
+    public void FrontRightRotor(float thrust)
     {
-        rb.AddForceAtPosition(this.gameObject.transform.up * running * thrustInputValue, rotorFrontRight.position);
+        rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorFrontRight.position);
     }
-    public void RearLeftRotor(int running)
+    public void RearLeftRotor(float thrust)
     {
-        rb.AddForceAtPosition(this.gameObject.transform.up * running * thrustInputValue, rotorRearLeft.position);
+        rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorRearLeft.position);
     }
-    public void RearRightRotor(int running)
+    public void RearRightRotor(float thrust)
     {
-        rb.AddForceAtPosition(this.gameObject.transform.up * running * thrustInputValue, rotorRearRight.position);
+        rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorRearRight.position);
     }
 
     public void ResetVelocity()
