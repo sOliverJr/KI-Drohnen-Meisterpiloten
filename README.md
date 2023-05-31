@@ -2,6 +2,17 @@
 
 ### Requirements
 Unity 2021.3.25
+Python 3.9 / 3.10
+
+### Installation
+```bash
+python3.9 -m venv venv 
+source venv/bin/activate # opens virtual environment
+pip install torch
+pip install mlagents
+pip install protobuf==3.20
+mlagents-learn --help # to verify installation
+```
 
 ### Links
 **Unity Drone Simulator**:
