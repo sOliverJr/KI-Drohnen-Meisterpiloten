@@ -71,3 +71,9 @@ Privacy • Terms of Use
 
 #Jetbrains
 *.idea
+
+# Venv
+venv
+/venv
+venv/
+/venv/
