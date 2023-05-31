@@ -9,7 +9,7 @@ public class FlyDroneAgent : Agent
     [SerializeField] private Material winMaterial;
     [SerializeField] private Material looseMaterial;
     [SerializeField] private MeshRenderer floor;
-    
+
     public override void OnEpisodeBegin()
     {
         transform.localPosition = new Vector3(0, 15f, 0);
@@ -30,10 +30,13 @@ public class FlyDroneAgent : Agent
     {
         // Position of the drone as input
         // Position <=> Vector3 -> 3 inputs
-        sensor.AddObservation(transform.localPosition);
+        sensor.AddObservation(transform.position);
         // Rotation of the drone as input
         // Rotation <=> Vector3 -> 3 inputs
         sensor.AddObservation(transform.rotation.eulerAngles);
+        // Position of the goal as input
+        // Position <=> Vector3 -> 3 inputs
+        sensor.AddObservation(DynGoalController.Instance.goal.transform.position);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -55,14 +58,17 @@ public class FlyDroneAgent : Agent
         {
             SetReward(+500f);
             floor.material = winMaterial;
-            EndEpisode();
+        
+            DynGoalController.Instance.DeleteGoal();
+            DynGoalController.Instance.SpawnNewGoal();
         }
         
         if (collision.gameObject.layer == 12) // Walls or floor
         {
             SetReward(-100f);
             floor.material = looseMaterial;
-            EndEpisode();
         }
+        
+        EndEpisode();
     }
 }
