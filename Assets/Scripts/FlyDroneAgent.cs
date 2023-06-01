@@ -7,17 +7,23 @@ using Unity.MLAgents.Sensors;
 public class FlyDroneAgent : Agent
 {
     public DynGoalController goalController;
-    
-    [SerializeField] private Material winMaterial;
-    [SerializeField] private Material looseMaterial;
-    [SerializeField] private MeshRenderer floor;
-    
-    [SerializeField] public DroneControllerTest drone;
 
+    [SerializeField] private MeshRenderer floor;
+    [SerializeField] public DroneControllerTest drone;
     [SerializeField] public Vector3 startPosition;
 
     private float lastDistance;
+    
+    Material winMaterial;
+    Material crashLooseMaterial;
+    Material flipLooseMaterial;
 
+    public void Start()
+    {
+        winMaterial = (Material)Resources.Load("Materials/winMaterial", typeof(Material));
+        crashLooseMaterial = (Material)Resources.Load("Materials/crashLooseMaterial", typeof(Material));
+        flipLooseMaterial = (Material)Resources.Load("Materials/flipLooseMaterial", typeof(Material));
+    }
 
     public override void OnEpisodeBegin()
     {
@@ -88,6 +94,7 @@ public class FlyDroneAgent : Agent
         if (level > 0)
         {
             SetReward(-500f);
+            floor.material = flipLooseMaterial;
             EndEpisode();
         } 
         /*
@@ -103,7 +110,7 @@ public class FlyDroneAgent : Agent
 
         AddReward(dot * 3);
 
-        AddReward(1f);
+        AddReward(7f);
         
         if (lastDistance -
             Vector3.Distance(transform.position, goalController.currentGoal.transform.position) > 0)
@@ -118,7 +125,7 @@ public class FlyDroneAgent : Agent
     {
         if (collision.gameObject == goalController.currentGoal) // Goal
         {
-            SetReward(+500);
+            SetReward(+1000);
             floor.material = winMaterial;
 
             if (!goalController.useStaticGoal)
@@ -132,7 +139,7 @@ public class FlyDroneAgent : Agent
             // check distance
             AddReward(-500 -Vector3.Distance(transform.position, goalController.currentGoal.transform.position));
             // SetReward(-100f);
-            floor.material = looseMaterial;
+            floor.material = crashLooseMaterial;
         }
         
         EndEpisode();
