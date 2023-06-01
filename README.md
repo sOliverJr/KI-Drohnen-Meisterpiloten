@@ -14,6 +14,13 @@ pip install protobuf==3.20
 mlagents-learn --help # to verify installation
 ```
 
+### Run Training
+```bash
+mlagents-learn --run-id=fly_training --train --force # starts training with id
+mlagents-learn --run-id=fly_training --train --resume # resumes training with given id
+```
+Enter play mode in Unity
+
 ### Links
 **Unity Drone Simulator**:
 https://github.com/UAVs-at-Berkeley/UnityDroneSim
