@@ -13,7 +13,6 @@ pip install mlagents
 pip install protobuf==3.20
 mlagents-learn --help # to verify installation
 ```
-<<<<<<< HEAD
 
 ### Run Training
 ```bash
@@ -22,8 +21,6 @@ mlagents-learn --run-id=fly_training --train --resume # resumes training with gi
 mlagents-learn config/trainer_config.yaml --run-id=fly_training --train --resume --time-scale=20 # with config file and default speed
 ```
 Enter play mode in Unity
-=======
->>>>>>> 6113d8c (ml test)
 
 ### Links
 **Unity Drone Simulator**:
