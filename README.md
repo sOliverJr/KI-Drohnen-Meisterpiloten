@@ -16,8 +16,8 @@ mlagents-learn --help # to verify installation
 
 ### Run Training
 ```bash
-mlagents-learn --run-id=fly_training --train --force # starts training with id
-mlagents-learn --run-id=fly_training --train --resume # resumes training with given id
+mlagents-learn config/trainer_config.yaml --run-id=fly_training --train --force # starts training with id
+mlagents-learn config/trainer_config.yaml --run-id=fly_training --train --resume # resumes training with given id
 ```
 Enter play mode in Unity
 
