@@ -6,23 +6,23 @@ using Unity.MLAgents.Sensors;
 
 public class FlyDroneAgent : Agent
 {
-    public DynGoalController goalController;
+    public GoalController goalController;
 
     [SerializeField] private MeshRenderer floor;
-    [SerializeField] public DroneControllerTest drone;
+    [SerializeField] public DroneController drone;
     [SerializeField] public Vector3 startPosition;
 
-    private float lastDistance;
+    private float _lastDistance;
     
-    Material winMaterial;
-    Material crashLooseMaterial;
-    Material flipLooseMaterial;
+    private Material _winMaterial;
+    private Material _crashLooseMaterial;
+    private Material _flipLooseMaterial;
 
     public void Start()
     {
-        winMaterial = (Material)Resources.Load("Materials/winMaterial", typeof(Material));
-        crashLooseMaterial = (Material)Resources.Load("Materials/crashLooseMaterial", typeof(Material));
-        flipLooseMaterial = (Material)Resources.Load("Materials/flipLooseMaterial", typeof(Material));
+        _winMaterial = (Material)Resources.Load("Materials/winMaterial", typeof(Material));
+        _crashLooseMaterial = (Material)Resources.Load("Materials/crashLooseMaterial", typeof(Material));
+        _flipLooseMaterial = (Material)Resources.Load("Materials/flipLooseMaterial", typeof(Material));
     }
 
     public override void OnEpisodeBegin()
@@ -32,7 +32,7 @@ public class FlyDroneAgent : Agent
         
         drone.ResetVelocity();
 
-        lastDistance = Vector3.Distance(startPosition, goalController.currentGoal.transform.position);
+        _lastDistance = Vector3.Distance(startPosition, goalController.goal.transform.position);
     }
     
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -52,12 +52,14 @@ public class FlyDroneAgent : Agent
         // Position of the drone as input
         // Position <=> Vector3 -> 3 inputs
         sensor.AddObservation(transform.position);
+        
         // Rotation of the drone as input
         // Rotation <=> Vector3 -> 3 inputs
         sensor.AddObservation(transform.rotation.eulerAngles);
+        
         // Position of the goal as input
         // Position <=> Vector3 -> 3 inputs
-        Transform goal = goalController.currentGoal.transform;
+        Transform goal = goalController.goal.transform;
         sensor.AddObservation(goal.position);
         
         // Distance
@@ -94,52 +96,50 @@ public class FlyDroneAgent : Agent
         if (level > 0)
         {
             SetReward(-500f);
-            floor.material = flipLooseMaterial;
+            floor.material = _flipLooseMaterial;
             EndEpisode();
-        } 
-        /*
-        else if (level < 0.5)
-        {
-            AddReward(1f);
         }
-        */
+        else if (level < -0.8)
+        {
+            AddReward(2f);
+        }
+        else
+        {
+            AddReward(-4f);
+        }
 
         // check if is facing target
         float dot = Vector3.Dot(transform.forward,
-            (goalController.currentGoal.transform.position - transform.position).normalized);
+            (goalController.goal.transform.position - transform.position).normalized);
 
         AddReward(dot * 3);
 
         AddReward(7f);
         
-        if (lastDistance -
-            Vector3.Distance(transform.position, goalController.currentGoal.transform.position) > 0)
+        if (_lastDistance -
+            Vector3.Distance(transform.position, goalController.goal.transform.position) > 0)
             AddReward(1);
         else 
             AddReward(-1);
         
-        lastDistance = Vector3.Distance(transform.position, goalController.currentGoal.transform.position);
+        _lastDistance = Vector3.Distance(transform.position, goalController.goal.transform.position);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject == goalController.currentGoal) // Goal
+        if (collision.gameObject == goalController.goal) // Goal
         {
             SetReward(+1000);
-            floor.material = winMaterial;
-
-            if (!goalController.useStaticGoal)
-            {
-                // DynGoalController.Instance.DeleteGoal();
-                goalController.RandomiseGoalPosition();
-            }
-        } 
-        else
+            floor.material = _winMaterial;
+            
+            // reset goal?
+            goalController.SetGoal();
+        } else
         {
             // check distance
-            AddReward(-500 -Vector3.Distance(transform.position, goalController.currentGoal.transform.position));
+            AddReward(-500 -Vector3.Distance(transform.position, goalController.goal.transform.position));
             // SetReward(-100f);
-            floor.material = crashLooseMaterial;
+            floor.material = _crashLooseMaterial;
         }
         
         EndEpisode();

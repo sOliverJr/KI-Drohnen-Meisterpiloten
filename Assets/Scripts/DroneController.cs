@@ -1,8 +1,6 @@
-using System;
-using Unity.Barracuda;
 using UnityEngine;
 
-public class DroneControllerTest : MonoBehaviour
+public class DroneController : MonoBehaviour
 {
     [Header("Rotors")]
     public Transform rotorFrontLeft;
@@ -16,11 +14,11 @@ public class DroneControllerTest : MonoBehaviour
     [Range(0f,1f)]
     public float rotateSpeed = 50f;
 
-    private Rigidbody rb;
+    private Rigidbody _rb;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
     }
 
     public void Rotate(float speed)
@@ -31,24 +29,24 @@ public class DroneControllerTest : MonoBehaviour
     // Agent Controls
     public void FrontLeftRotor(float thrust)
     {
-        rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorFrontLeft.position);
+        _rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorFrontLeft.position);
     }
     public void FrontRightRotor(float thrust)
     {
-        rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorFrontRight.position);
+        _rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorFrontRight.position);
     }
     public void RearLeftRotor(float thrust)
     {
-        rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorRearLeft.position);
+        _rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorRearLeft.position);
     }
     public void RearRightRotor(float thrust)
     {
-        rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorRearRight.position);
+        _rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorRearRight.position);
     }
 
     public void ResetVelocity()
     {
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
     }
 }
