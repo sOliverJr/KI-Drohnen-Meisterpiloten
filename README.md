@@ -4,10 +4,23 @@
 Unity 2021.3.25
 Python 3.9 / 3.10
 
-### Installation
+### Installation (Unix)
 ```bash
 python3.9 -m venv venv 
 source venv/bin/activate # opens virtual environment
+pip install torch
+pip install mlagents
+pip install protobuf==3.20
+mlagents-learn --help # to verify installation
+```
+
+### Installation (Windows)
+```bash
+# Install Python 3.9
+# Goto Repository root
+py -m venv venv 
+cd venv/bin
+activate.bat # opens virtual environment
 pip install torch
 pip install mlagents
 pip install protobuf==3.20
