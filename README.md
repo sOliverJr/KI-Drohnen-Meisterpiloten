@@ -29,6 +29,12 @@ mlagents-learn --help # to verify installation
 
 ### Run Training
 ```bash
+# Unix
+source venv/bin/activate
+# Windows
+cd venv/scripts
+activate.bat
+
 mlagents-learn config/trainer_config.yaml --run-id=fly_training --train --force # starts training with id
 mlagents-learn config/trainer_config.yaml --run-id=fly_training --train --resume # resumes training with given id
 ```
