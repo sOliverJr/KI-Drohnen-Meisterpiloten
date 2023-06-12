@@ -3,6 +3,7 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using Unity.VisualScripting;
 
 public class FlyDroneAgent : Agent
 {
@@ -71,44 +72,64 @@ public class FlyDroneAgent : Agent
         // Direction
         sensor.AddObservation(Vector3.Dot(transform.forward,
             (goal.position - transform.position).normalized));
+        
+        // Velocity
+        sensor.AddObservation(drone._rb.velocity);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float rotorOneActive = actions.ContinuousActions[0];
-        float rotorTwoActive = actions.ContinuousActions[1];
-        float rotorThreeActive = actions.ContinuousActions[2];
-        float rotorFourActive = actions.ContinuousActions[3];
-        float turnLeftAction = actions.ContinuousActions[4];
-        float turnRightAction = actions.ContinuousActions[5];
-
-        drone.FrontLeftRotor(rotorOneActive);
-        drone.FrontRightRotor(rotorTwoActive);
-        drone.RearLeftRotor(rotorThreeActive);
-        drone.RearRightRotor(rotorFourActive);
-        drone.Rotate(-turnLeftAction);
-        drone.Rotate(turnRightAction);
+        float thrustFL = actions.ContinuousActions[0];
+        float thrustFR = actions.ContinuousActions[1];
+        float thrustRL = actions.ContinuousActions[2];
+        float thrustRR = actions.ContinuousActions[3];
+        drone.setThrust(thrustFL, thrustFR, thrustRL, thrustRR);
         
+        // float turnLeftAction = actions.ContinuousActions[4];
+        // float turnRightAction = actions.ContinuousActions[5];
+        // drone.Rotate(-turnLeftAction);
+        // drone.Rotate(turnRightAction);
+        
+        if(thrustFL > 0 && thrustFR > 0 && thrustRL > 0 && thrustRR > 0)
+            AddReward(10);
+        
+        // Check velocity
+        if (drone._rb.velocity.y >= -2)
+        {
+            AddReward(10);
+        }
+
+        if (drone._rb.velocity.x is <= 2 and >= -2)
+        {
+            AddReward(10);
+        }
+
+        if (drone._rb.velocity.z is <= 2 and >= -2)
+        {
+            AddReward(10);
+        }
+
         // check if flipped
         // -1 = upright
         // 1 = flipped 180°
         float level = Vector3.Dot(transform.up, Vector3.down);
         if (level > 0)
         {
-            SetReward(-500f);
+            SetReward(-1000);
             floor.material = _flipLooseMaterial;
             EndEpisode();
         }
         else if (level < -0.8)
         {
-            AddReward(2f);
+            AddReward(10);
         }
         else
         {
-            AddReward(-4f);
+            AddReward(-20f);
         }
 
         // check if is facing target
+        /*
         float dot = Vector3.Dot(transform.forward,
             (goalController.goal.transform.position - transform.position).normalized);
 
@@ -123,6 +144,9 @@ public class FlyDroneAgent : Agent
             AddReward(-1);
         
         _lastDistance = Vector3.Distance(transform.position, goalController.goal.transform.position);
+        */
+        
+        AddReward(7);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -137,7 +161,7 @@ public class FlyDroneAgent : Agent
         } else
         {
             // check distance
-            AddReward(-500 -Vector3.Distance(transform.position, goalController.goal.transform.position));
+            AddReward(-1000 -Vector3.Distance(transform.position, goalController.goal.transform.position));
             // SetReward(-100f);
             floor.material = _crashLooseMaterial;
         }

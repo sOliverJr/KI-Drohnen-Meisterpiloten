@@ -1,24 +1,43 @@
+using System;
 using UnityEngine;
 
 public class DroneController : MonoBehaviour
 {
-    [Header("Rotors")]
+    [Header("References")]
     public Transform rotorFrontLeft;
     public Transform rotorFrontRight;
     public Transform rotorRearLeft;
     public Transform rotorRearRight;
 
+    public Rigidbody _rb;
+    
     [Header("Thrust")]
     public float thrustInputValue = 5f;
 
     [Range(0f,1f)]
     public float rotateSpeed = 50f;
 
-    private Rigidbody _rb;
+    [SerializeField]
+    private Vector4 currentThrust = new Vector4(0, 0, 0, 0);
+
+    public Vector3 velocity;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
+    }
+
+    private void Update()
+    {
+        velocity = _rb.velocity;
+    }
+
+    public void FixedUpdate()
+    {
+        _rb.AddForceAtPosition(gameObject.transform.up * currentThrust.x * thrustInputValue, rotorFrontLeft.position);
+        _rb.AddForceAtPosition(gameObject.transform.up * currentThrust.y * thrustInputValue, rotorFrontRight.position);
+        _rb.AddForceAtPosition(gameObject.transform.up * currentThrust.z * thrustInputValue, rotorRearLeft.position);
+        _rb.AddForceAtPosition(gameObject.transform.up * currentThrust.w * thrustInputValue, rotorRearRight.position);
     }
 
     public void Rotate(float speed)
@@ -26,22 +45,19 @@ public class DroneController : MonoBehaviour
         transform.Rotate(transform.up, speed * rotateSpeed * Time.deltaTime, Space.Self);
     }
 
-    // Agent Controls
-    public void FrontLeftRotor(float thrust)
+    public void setThrust(float fl, float fr, float rl, float rr)
     {
-        _rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorFrontLeft.position);
+        float frontLeft = Mathf.Clamp(fl, 0, 1);
+        float frontRight = Mathf.Clamp(fr, 0, 1);
+        float rearLeft = Mathf.Clamp(rl, 0, 1);
+        float rearRight = Mathf.Clamp(rr, 0, 1);
+
+        currentThrust = new Vector4(frontLeft, frontRight, rearRight, rearLeft);
     }
-    public void FrontRightRotor(float thrust)
+
+    public Vector3 getVelocity()
     {
-        _rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorFrontRight.position);
-    }
-    public void RearLeftRotor(float thrust)
-    {
-        _rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorRearLeft.position);
-    }
-    public void RearRightRotor(float thrust)
-    {
-        _rb.AddForceAtPosition(gameObject.transform.up * thrust * thrustInputValue, rotorRearRight.position);
+        return _rb.velocity;
     }
 
     public void ResetVelocity()
