@@ -1,0 +1,46 @@
+name: Deploy App-Center Android Experimental Build
+
+on:
+  workflow_dispatch:
+  push:
+    # branches:
+    #   - prod
+
+env:
+  APP_CENTER_TOKEN: ${{ secrets.APPCENTER_ANDROID_DEV_API_TOKEN }}
+  APP_NAME: ${{ 'Medikamentenausgabe'  }}
+  UPLOAD_FILE: ${{ 'App/android/app/build/outputs/apk/release/app-release.apk'  }}
+  TESTING_GROUP: ${{ 'Collaborators' }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          cd App
+          yarn install
+      - name: Build android
+        run: |
+          cd App/android
+          ./gradlew assembleRelease
+      - name: Upload to Github
+        uses: actions/upload-artifact@v1
+        with:
+          name: Medikamentenausgabe.apk
+          path: ${{ env.UPLOAD_FILE }}
+
+      - name: Upload to App Center
+        uses: wzieba/AppCenter-Github-Action@v1
+        with:
+          appName: ${{ env.APP_NAME }}
+          token: ${{ env.APP_CENTER_TOKEN }}
+          file: ${{ env.UPLOAD_FILE }}
+          group: ${{ env.TESTING_GROUP }}
+          notifyTesters: false
+          debug: true
