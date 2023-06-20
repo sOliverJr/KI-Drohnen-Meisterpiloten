@@ -19,8 +19,9 @@ mlagents-learn --help # to verify installation
 # Install Python 3.9
 # Goto Repository root
 py -m venv venv 
-cd venv/scripts
-activate.bat # opens virtual environment
+venv/scripts/activate # opens the virtual enviroment
+# cd venv/scripts
+# activate.bat # opens virtual environment
 pip install torch
 pip install mlagents
 pip install protobuf==3.20
