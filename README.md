@@ -27,6 +27,9 @@ pip install protobuf==3.20
 mlagents-learn --help # to verify installation
 ```
 
+### Config
+```config/trainer_config.yaml```
+
 ### Run Training
 ```bash
 # Unix
