@@ -37,6 +37,7 @@ source venv/bin/activate
 # Windows
 cd venv/scripts
 activate.bat
+cd ../..
 
 mlagents-learn config/trainer_config.yaml --run-id=fly_training --train --force --time-scale=20 # starts training with id
 mlagents-learn config/trainer_config.yaml --run-id=fly_training --train --resume --time-scale=20 # resumes training with given id
