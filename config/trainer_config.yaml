@@ -16,8 +16,8 @@ behaviors:
       epsilon_schedule: linear
     network_settings:
       normalize: false
-      hidden_units: 128
-      num_layers: 2
+      hidden_units: 250
+      num_layers: 10
       vis_encode_type: simple
       memory: null
       goal_conditioning_type: hyper
@@ -28,8 +28,8 @@ behaviors:
         strength: 1.0
         network_settings:
           normalize: false
-          hidden_units: 128
-          num_layers: 2
+          hidden_units: 250
+          num_layers: 10
           vis_encode_type: simple
           memory: null
           goal_conditioning_type: hyper

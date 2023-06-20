@@ -2,58 +2,22 @@
     "Fly": {
         "checkpoints": [
             {
-                "steps": 5999999,
-                "file_path": "results/fly_training/Fly/Fly-5999999.onnx",
-                "reward": 1285.4327136127888,
-                "creation_time": 1685629086.080568,
+                "steps": 482260,
+                "file_path": "results/fly_training/Fly/Fly-482260.onnx",
+                "reward": 1300.2995338439941,
+                "creation_time": 1687250311.703081,
                 "auxillary_file_paths": [
-                    "results/fly_training/Fly/Fly-5999999.pt"
-                ]
-            },
-            {
-                "steps": 6383249,
-                "file_path": "results/fly_training/Fly/Fly-6383249.onnx",
-                "reward": 1700.643955006319,
-                "creation_time": 1685629472.627305,
-                "auxillary_file_paths": [
-                    "results/fly_training/Fly/Fly-6383249.pt"
-                ]
-            },
-            {
-                "steps": 6482508,
-                "file_path": "results/fly_training/Fly/Fly-6482508.onnx",
-                "reward": 1618.7976828835228,
-                "creation_time": 1685629572.357192,
-                "auxillary_file_paths": [
-                    "results/fly_training/Fly/Fly-6482508.pt"
-                ]
-            },
-            {
-                "steps": 6499954,
-                "file_path": "results/fly_training/Fly/Fly-6499954.onnx",
-                "reward": 1373.558456784203,
-                "creation_time": 1685629769.645014,
-                "auxillary_file_paths": [
-                    "results/fly_training/Fly/Fly-6499954.pt"
-                ]
-            },
-            {
-                "steps": 6642214,
-                "file_path": "results/fly_training/Fly/Fly-6642214.onnx",
-                "reward": 1692.8988020155166,
-                "creation_time": 1685630133.920424,
-                "auxillary_file_paths": [
-                    "results/fly_training/Fly/Fly-6642214.pt"
+                    "results/fly_training/Fly/Fly-482260.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 6642214,
+            "steps": 482260,
             "file_path": "results/fly_training/Fly.onnx",
-            "reward": 1692.8988020155166,
-            "creation_time": 1685630133.920424,
+            "reward": 1300.2995338439941,
+            "creation_time": 1687250311.703081,
             "auxillary_file_paths": [
-                "results/fly_training/Fly/Fly-6642214.pt"
+                "results/fly_training/Fly/Fly-482260.pt"
             ]
         }
     },
