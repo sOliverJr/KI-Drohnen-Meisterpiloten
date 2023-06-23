@@ -34,10 +34,11 @@ public class DroneController : MonoBehaviour
 
     public void FixedUpdate()
     {
-        _rb.AddForceAtPosition(gameObject.transform.up * currentThrust.x * thrustInputValue, rotorFrontLeft.position);
-        _rb.AddForceAtPosition(gameObject.transform.up * currentThrust.y * thrustInputValue, rotorFrontRight.position);
-        _rb.AddForceAtPosition(gameObject.transform.up * currentThrust.z * thrustInputValue, rotorRearLeft.position);
-        _rb.AddForceAtPosition(gameObject.transform.up * currentThrust.w * thrustInputValue, rotorRearRight.position);
+        var up = gameObject.transform.up;
+        _rb.AddForceAtPosition(up * (currentThrust.x * thrustInputValue), rotorFrontLeft.position);
+        _rb.AddForceAtPosition(up * (currentThrust.y * thrustInputValue), rotorFrontRight.position);
+        _rb.AddForceAtPosition(up * (currentThrust.z * thrustInputValue), rotorRearLeft.position);
+        _rb.AddForceAtPosition(up * (currentThrust.w * thrustInputValue), rotorRearRight.position);
     }
 
     public void Rotate(float speed)
