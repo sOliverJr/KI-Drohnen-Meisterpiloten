@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,22 +123,16 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &93419147 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 797292352317950077, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+  m_PrefabInstance: {fileID: 583070445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &286503865 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7495840652757499344, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
   m_PrefabInstance: {fileID: 583070445}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &286503867 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 286503867, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
-  m_PrefabInstance: {fileID: 583070445}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9bdeae0637545b1816e5416a55da8df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &583070445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -146,6 +140,38 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1763427781}
     m_Modifications:
+    - target: {fileID: 963194228, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194228, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194228, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194228, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9986295
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194228, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.052335896
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194228, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194228, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194228, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4483252175150748684, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
       propertyPath: m_Name
       value: LeosDrone
@@ -160,7 +186,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7495840652757499344, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 23.8
       objectReference: {fileID: 0}
     - target: {fileID: 7495840652757499344, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -319,7 +345,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4311721711943957034, guid: cea093aa3b2e029428bb508d646de1cc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15
+      value: 33.1
       objectReference: {fileID: 0}
     - target: {fileID: 4311721711943957034, guid: cea093aa3b2e029428bb508d646de1cc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -377,6 +403,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b45833492a0845ceb594b214d0bec5c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1357613795 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7418411230493773946, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+  m_PrefabInstance: {fileID: 583070445}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1617211780 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8623621725138754002, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+  m_PrefabInstance: {fileID: 583070445}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1722475298 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8506186967759177207, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+  m_PrefabInstance: {fileID: 583070445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1741192143
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +436,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1741192144
 Transform:
   m_ObjectHideFlags: 0
@@ -503,7 +544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ad977711e713443a398b348b3a4d84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  droneAgent: {fileID: 286503867}
+  droneAgent: {fileID: 2133795314}
   checkpoint: {fileID: 1321992153}
 --- !u!4 &1763427781
 Transform:
@@ -618,3 +659,61 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &2133795312 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4483252175150748684, guid: d3a8a00416cc6a7448828aae684502a0, type: 3}
+  m_PrefabInstance: {fileID: 583070445}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2133795314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133795312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 967048cb8976aad41b6d9754d2c6f0c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 50000
+  rotorFrontLeft: {fileID: 93419147}
+  rotorFrontRight: {fileID: 1722475298}
+  rotorRearLeft: {fileID: 1617211780}
+  rotorRearRight: {fileID: 1357613795}
+  maxThrottle: 10
+  checkpoint: {fileID: 1321992152}
+--- !u!114 &2133795315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133795312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BrainParameters:
+    VectorObservationSize: 1
+    NumStackedVectorObservations: 1
+    m_ActionSpec:
+      m_NumContinuousActions: 0
+      BranchSizes: 01000000
+    VectorActionSize: 01000000
+    VectorActionDescriptions: []
+    VectorActionSpaceType: 0
+    hasUpgradedBrainParametersWithActionSpec: 1
+  m_Model: {fileID: 0}
+  m_InferenceDevice: 0
+  m_BehaviorType: 1
+  m_BehaviorName: My Behavior
+  TeamId: 0
+  m_UseChildSensors: 1
+  m_UseChildActuators: 1
+  m_DeterministicInference: 0
+  m_ObservableAttributeHandling: 0

@@ -32,9 +32,9 @@ public class DroneArea : MonoBehaviour
     /// </summary>
     public void ResetArea()
     {
-        RemoveAllCheckpoints();
-        droneAgent.Reset();
-        SpawnCheckpoint();
+        //RemoveAllCheckpoints();
+        //droneAgentOld.Reset();
+        //SpawnCheckpoint();
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class DroneArea : MonoBehaviour
     /// <param name="checkpointObject">Checkpoint der entfernt werden soll.</param>
     private void RemoveSpecificCheckpoint(GameObject checkpointObject)
     {
-        Destroy(checkpointObject);
+        //Destroy(checkpointObject);
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public class DroneArea : MonoBehaviour
     /// </summary>
     private void RemoveAllCheckpoints()
     {
-        Destroy(GameObject.FindGameObjectWithTag("Checkpoint"));
+        //Destroy(GameObject.FindGameObjectWithTag("Checkpoint"));
     }
 
     /// <summary>
@@ -59,11 +59,11 @@ public class DroneArea : MonoBehaviour
     /// </summary>
     private void SpawnCheckpoint()
     {
-        GameObject checkpointObject = Instantiate<GameObject>(checkpoint.gameObject);
-        checkpointObject.transform.localPosition = new Vector3(0f, 5f, 0f);
+        //GameObject checkpointObject = Instantiate<GameObject>(checkpoint.gameObject);
+        //checkpointObject.transform.localPosition = new Vector3(0f, 5f, 0f);
 
         // TODO: Verstehen
-        checkpointObject.transform.SetParent(transform);
+        //checkpointObject.transform.SetParent(transform);
     }
 
     /// <summary>
@@ -72,6 +72,6 @@ public class DroneArea : MonoBehaviour
     /// <param name="checkpoint">Erreichter Checkpunkt</param>
     public void CheckpointReached(GameObject checkpoint)
     {
-        RemoveSpecificCheckpoint(checkpoint);
+        //RemoveSpecificCheckpoint(checkpoint);
     }
 }

@@ -20,9 +20,8 @@ public class GridController : MonoBehaviour
                 {
                     Vector3 pos = new Vector3(originalPos.x + spacing * x, originalPos.y, originalPos.z + spacing * y);
 
-                    GameObject newObject = Instantiate(prefab);
+                    GameObject newObject = Instantiate(prefab, transform, true);
                     newObject.transform.position = pos;
-                    newObject.transform.SetParent(transform);
                 }
             }
         }

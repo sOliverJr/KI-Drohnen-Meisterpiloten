@@ -6,7 +6,7 @@ using Unity.MLAgents.Sensors;
 using Unity.VisualScripting;
 
 
-public class DroneAgent : Agent
+public class DroneAgentOld : Agent
 {
     private DroneArea _droneArea;
     
@@ -53,7 +53,7 @@ public class DroneAgent : Agent
     /// <param name="actionBuffers">Eingabevektor</param>
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        _thrustRotorFrontLeft = ScalarNormalizedToRange(actionBuffers.ContinuousActions[0], 1f, -1f, 0f, 1f);
+        _thrustRotorFrontLeft = 
         _thrustRotorFrontRight = ScalarNormalizedToRange(actionBuffers.ContinuousActions[1], 1f, -1f, 0f, 1f);
         _thrustRotorRearLeft = ScalarNormalizedToRange(actionBuffers.ContinuousActions[2], 1f, -1f, 0f, 1f);
         _thrustRotorRearRight = ScalarNormalizedToRange(actionBuffers.ContinuousActions[3], 1f, -1f, 0f, 1f);
