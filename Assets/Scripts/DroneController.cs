@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DroneController : MonoBehaviour
@@ -9,7 +10,7 @@ public class DroneController : MonoBehaviour
     public Transform rotorRearRight;
 
     [Header("Thrust")]
-    public float thrustInputValue = 5f;
+    public float thrustInputValue = 9f;
 
     [Range(0f,1f)]
     public float rotateSpeed = 50f;
@@ -46,7 +47,17 @@ public class DroneController : MonoBehaviour
 
     public void ResetVelocity()
     {
-        _rb.velocity = Vector3.zero;
+        _rb.velocity = Vector3.zero;                                                                          
         _rb.angularVelocity = Vector3.zero;
+        _rb.isKinematic = true;
+
+        StartCoroutine(EnableRigidbodyAfterDelay());
+    }
+
+    IEnumerator EnableRigidbodyAfterDelay()
+    {
+        yield return new WaitForSeconds(0.1f); 
+
+        _rb.isKinematic = false;
     }
 }

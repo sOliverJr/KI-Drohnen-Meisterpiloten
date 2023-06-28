@@ -57,7 +57,7 @@ engine_settings:
   width: 84
   height: 84
   quality_level: 5
-  time_scale: 1.0
+  time_scale: 20
   target_frame_rate: -1
   capture_frame_rate: 60
   no_graphics: false
@@ -66,8 +66,8 @@ checkpoint_settings:
   run_id: fly_training
   initialize_from: null
   load_model: false
-  resume: true
-  force: false
+  resume: false
+  force: true
   train_model: true
   inference: false
   results_dir: results
