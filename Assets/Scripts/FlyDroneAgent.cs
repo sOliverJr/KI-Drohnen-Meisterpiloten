@@ -16,8 +16,6 @@ public class FlyDroneAgent : Agent
     [SerializeField] private MeshRenderer floor;
     [SerializeField] public DroneController drone;
     [SerializeField] public Vector3 startPosition;
-    private Vector3 goalstartposition;
-    private Vector3 dronestarposition;
     private float _lastDistance;
 
     private Material _winMaterial;
@@ -60,12 +58,10 @@ public class FlyDroneAgent : Agent
 
     public void Start()
     {
-        goalstartposition = goalController.goal.transform.position;
-        dronestarposition = transform.position;
         resetGoalCounter = 0;
         _winMaterial = (Material)Resources.Load("Materials/winMaterial", typeof(Material));
         _crashLooseMaterial = (Material)Resources.Load("Materials/crashLooseMaterial", typeof(Material));
-        _flipLooseMaterial = (Material)Resources.Load("Materials/flipLooseMaterial", typeof(Material));
+
         goalController.SetGoal();
 
 
@@ -78,21 +74,17 @@ public class FlyDroneAgent : Agent
 
     }
 
+    //Zurücksetzen der Episode
     public override void OnEpisodeBegin()
     {
         goalcounter = 0;
         drone.ResetVelocity();
         transform.localPosition = startPosition;
-
         startTime = Time.time;
-
         transform.rotation = Quaternion.identity;
-        print("newEpisode");
-
-
-
     }
 
+    //Setze die vier Ausgabeparameter
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         ActionSegment<float> continuousActions = actionsOut.ContinuousActions;
@@ -101,15 +93,13 @@ public class FlyDroneAgent : Agent
         continuousActions[1] = Convert.ToInt32(Input.GetKey(KeyCode.W));
         continuousActions[2] = Convert.ToInt32(Input.GetKey(KeyCode.A));
         continuousActions[3] = Convert.ToInt32(Input.GetKey(KeyCode.S));
-
-
-
     }
 
+    //Festlegen der Inputpsrameter
     public override void CollectObservations(VectorSensor sensor)
     {
 
-
+        //Richtung und Abstand von Drohne zum Ziel
         float distanceX = goalController.goalCenter.transform.position.x - transform.position.x;
         float distanceY = goalController.goalCenter.transform.position.y - transform.position.y;
         float distanceZ = goalController.goalCenter.transform.position.z - transform.position.z;
@@ -118,42 +108,35 @@ public class FlyDroneAgent : Agent
         sensor.AddObservation(distanceY);
         sensor.AddObservation(distanceZ);
 
-
+        //rotation der Drohne
         sensor.AddObservation(transform.rotation.x);
         sensor.AddObservation(transform.rotation.y);
         sensor.AddObservation(transform.rotation.z);
         sensor.AddObservation(transform.rotation.w);
 
         Rigidbody rb = drone.GetComponent<Rigidbody>();
+
+        //Geschwindigkeit und Richtung der Drohne
         sensor.AddObservation(rb.velocity.x);
         sensor.AddObservation(rb.velocity.y);
         sensor.AddObservation(rb.velocity.z);
 
+        //Geschwindigkeit und Richtung der Drehbewegung der Drohne
         sensor.AddObservation(rb.angularVelocity.x);
         sensor.AddObservation(rb.angularVelocity.y);
         sensor.AddObservation(rb.angularVelocity.z);
-
     }
 
+    //Gibt den Agenten Belohnungen im Flugverlauf
     public override void OnActionReceived(ActionBuffers actions)
     {
-
+        //Umwandeln der Ausgabewerte ins Intervall von 0 bis 1 um 
         float rotorOneActive = actions.ContinuousActions[0] / 2 + 0.5f;
         float rotorTwoActive = actions.ContinuousActions[1] / 2 + 0.5f;
         float rotorThreeActive = actions.ContinuousActions[2] / 2 + 0.5f;
         float rotorFourActive = actions.ContinuousActions[3] / 2 + 0.5f;
 
-
-        if (rotorOneActive < minoutput)
-        {
-            minoutput = rotorOneActive;
-        }
-
-        if (rotorOneActive > maxoutput)
-        {
-            maxoutput = rotorOneActive;
-        }
-
+        //ÜBergabe der Ausgabewerte auf die Rotoren
         drone.FrontLeftRotor(rotorOneActive);
         drone.FrontRightRotor(rotorTwoActive);
         drone.RearLeftRotor(rotorThreeActive);
@@ -166,251 +149,191 @@ public class FlyDroneAgent : Agent
         float currentDistance = currentDirection.magnitude;
 
 
-
-             float factorvelocity = 0.5f;
-                float facotrangvelocity = 2;
-                float factorgoal = 1;
-                float factordistance = 3;
-                float factorup = 1;
-/*
-        //nach 700000
-        float factorvelocity = 0.3f;
-        float facotrangvelocity = 0.07f;
+        //Gewichtung der Belohungen, um diese im Trainingsverlauf zu ändern
+        float factorvelocity = 1;
+        float facotrangvelocity = 1;
         float factorgoal = 1;
-        float factordistance = 13;
-        float factorup = 3;
-*/
-        /* float factorvelocity = 0.1f;
-        float facotrangvelocity = 0.2f;
-        float factorgoal = 2;
-        float factordistance = 20;
-        float factorup = 5;*/
+        float factordistance = 1;
+        float factorup = 1;
 
-
-        if ((_lastDistance - currentDistance) <= 3 && (_lastDistance - currentDistance) >0.5f)
+        //Belohung: Abstand zwischen Drohne und Ziel wird kleiner
+        if ((_lastDistance - currentDistance) <= 3 && (_lastDistance - currentDistance) > 0.5f)
         {
-            AddReward(0.01f*factordistance);
+            AddReward(0.01f * factordistance);
             rewarddistance += (0.01f * factordistance);
         }
-
         else
         {
             AddReward(-0.01f * factordistance);
             rewarddistance += (-0.01f * factordistance);
-
-        }
-        /*hiermit werden drohnen extrem langsam
-        if ((_lastDistance - currentDistance) <= 0)
-        {
-            AddReward(-0.1f * factordistance);
-            rewarddistance += (-0.1f * factordistance);
         }
 
-        else
-        {
-            AddReward(0.03f * factordistance);
-
-        }*/
-
-        if (maxforward < _lastDistance - currentDistance)
-            maxforward = _lastDistance - currentDistance;
         //drone soll richtig ausgerichtet sein
-        //einmal richtung ziel zeigen 
+        //einmal richtung Ziel zeigen 
         AddReward(Vector3.Dot(-transform.up, Vector3.Normalize(currentDirection)) / 70 * factorgoal);
         rewardrotationgoal += Vector3.Dot(-transform.up, Vector3.Normalize(currentDirection)) / 70 * factorgoal;
 
         //nach oben zeigen, um nicht abzustürzen
+        AddReward(((Vector3.Dot(transform.up, new Vector3(0, 1, 0))) - 0.75f) * 4 / 70 * factorup);
+        rewardrotationforward += (((Vector3.Dot(transform.up, new Vector3(0, 1, 0))) - 0.75f) * 4 / 70 * factorup);
 
-        AddReward(((Vector3.Dot(transform.up, new Vector3(0, 1, 0))) - 0.75f) * 4 / 70* factorup);
-        //print("up " + ((Vector3.Dot(transform.up, new Vector3(0, 1, 0))) - 0.75f) * 4 / 70);
-        rewardrotationforward += (((Vector3.Dot(transform.up, new Vector3(0, 1, 0))) - 0.75f) * 4 / 70* factorup);
-        //print("up" + ((Vector3.Dot(transform.up, new Vector3(0, 1, 0)) - 0.75f) * 4));
-        
 
-        //velocity
-        if (rb.velocity.magnitude < 3 && rb.velocity.magnitude >1)
+        //Belohnung der Geschwindigkeit
+        if (rb.velocity.magnitude < 3 && rb.velocity.magnitude > 1)
         {
-            AddReward((0.01f / factorvelocity));
-            rewardvelocity += (0.01f / factorvelocity);
+            AddReward((0.01f * factorvelocity));
+            rewardvelocity += (0.01f * factorvelocity);
         }
         else if (rb.velocity.magnitude < 5)
         {
-            AddReward((0.001f / factorvelocity));
-            rewardvelocity += (0.001f / factorvelocity);
+            AddReward((0.001f * factorvelocity));
+            rewardvelocity += (0.001f * factorvelocity);
         }
         else
         {
-            AddReward((-0.01f / factorvelocity));
-            rewardvelocity -= (0.01f / factorvelocity);
+            AddReward((-0.01f * factorvelocity));
+            rewardvelocity -= (0.01f * factorvelocity);
         }
 
-        //angualr velocity
+        //Belohnung der Rotationsgeschwindigkeit der Drohne
         if (rb.angularVelocity.magnitude < 0.5)
         {
-            AddReward((0.01f / facotrangvelocity));
-            rewardangvelocity += (0.01f / facotrangvelocity);
+            AddReward((0.01f * facotrangvelocity));
+            rewardangvelocity += (0.01f * facotrangvelocity);
         }
-
-
         else if (rb.angularVelocity.magnitude < 1)
         {
-            rewardangvelocity += (0.001f / facotrangvelocity);
-            AddReward((0.001f / facotrangvelocity));
+            rewardangvelocity += (0.001f * facotrangvelocity);
+            AddReward((0.001f * facotrangvelocity));
         }
-
-        else if(rb.angularVelocity.magnitude > 3.5f)
+        else if (rb.angularVelocity.magnitude > 3.5f)
         {
-            AddReward(-0.1f / facotrangvelocity);
-            rewardangvelocity -= (0.1f / facotrangvelocity);
+            AddReward(-0.1f * facotrangvelocity);
+            rewardangvelocity -= (0.1f * facotrangvelocity);
         }
         else
         {
-            AddReward((-0.01f / facotrangvelocity));
-            rewardangvelocity -= (0.01f / facotrangvelocity);
+            AddReward((-0.01f * facotrangvelocity));
+            rewardangvelocity -= (0.01f * facotrangvelocity);
         }
 
-
-        
-
-        if (minup > Vector3.Dot(transform.up, new Vector3(0, 1, 0)))
-            minup = Vector3.Dot(transform.up, new Vector3(0, 1, 0));
-
-        if (maxup < Vector3.Dot(transform.up, new Vector3(0, 1, 0)))
-            maxup = Vector3.Dot(transform.up, new Vector3(0, 1, 0));
-
-        if (minforward > Vector3.Dot(transform.up, Vector3.Normalize(new Vector3(currentDirection.x, transform.up.y, currentDirection.z))))
-            minforward = Vector3.Dot(transform.up, Vector3.Normalize(new Vector3(currentDirection.x, transform.up.y, currentDirection.z)));
-
-        if (maxforward < Vector3.Dot(transform.up, Vector3.Normalize(new Vector3(currentDirection.x, transform.up.y, currentDirection.z))))
-            maxforward = Vector3.Dot(transform.up, Vector3.Normalize(new Vector3(currentDirection.x, transform.up.y, currentDirection.z)));
-
-
-
+        //speichere den aktuellen Abstand zwischen Drohne und Ziel zum Vergleich für den nächsten Frame
         _lastDistance = Vector3.Distance(transform.position, goalController.goalCenter.transform.position);
-
-        //print("velocityrb" + rb.velocity.magnitude);
-
-        if(Time.time - startTime > maxtime)
-            maxtime = Time.time- startTime;
-        //print("Time: " + maxtime + ", " + Time.time + ", " + startTime);
     }
 
+    //Bei eintreten ins Ziel 
     private void OnTriggerEnter(Collider other)
     {
 
-        if (Time.time - startTime >= 0.01f)
+        if (other.gameObject == goalController.goal)
         {
-            //print("triggerenter");
+            Rigidbody rb = transform.gameObject.GetComponent<Rigidbody>();
+            goalcounter += 1;
 
+            //Gewichtung Belohung für die Zielerreichung
+            float factorgoal = 5;
 
-            //print("test");
-
-            //make reward dependend on entrance speed???
-            //print(other.gameObject.name);
-            if (other.gameObject == goalController.goal) // Goal
+            //Belohnung für eine möglichst geringe Geschwindigkeit
+            if (rb.velocity.magnitude < 5)
             {
-                Rigidbody rb = transform.gameObject.GetComponent<Rigidbody>();
-                goalcounter += 1;
-
-                float factorgoal = 5;
-
-                if (rb.velocity.magnitude < 5)
-                {
-                    AddReward(factorgoal / (rb.velocity.magnitude * 2) + 1);
-                    rewardgoalreached.Add( (factorgoal / (rb.velocity.magnitude * 2) + 1));
-                }
-                    
-
-
-               if (rb.angularVelocity.magnitude < 2)
-                {
-                    AddReward(factorgoal / (rb.angularVelocity.magnitude * 4) + 1);
-                    rewardgoalreached.Add((factorgoal / (rb.angularVelocity.magnitude * 4) + 1));
-                }
-                    
-
-                if (Vector3.Dot(transform.up, new Vector3(0, 1, 0)) > 0.5f)
-                {
-                    AddReward(factorgoal / ((Vector3.Dot(transform.up, new Vector3(0, -1, 0)) + 2) * 6));
-                    rewardgoalreached.Add((factorgoal / ((Vector3.Dot(transform.up, new Vector3(0, -1, 0)) + 2) * 6)));
-                }
-                  
-
-                AddReward(factorgoal * goalcounter);
-                rewardgoalreached.Add(factorgoal * goalcounter);
-
-
-                floor.material = _winMaterial;
-                //print("Goalcounter:" + goalcounter);
-                 rewards[goalcounter].Add(GetCumulativeReward());
-                goalController.SetGoal();
+                AddReward(factorgoal / (rb.velocity.magnitude * 2) + 1);
+                rewardgoalreached.Add((factorgoal / (rb.velocity.magnitude * 2) + 1));
             }
-            if (goalcounter >= 10)
-                EndEpisode();
+
+
+            //Belohnung für eine möglichst geringe Rotationsgeschwindigkeit
+            if (rb.angularVelocity.magnitude < 2)
+            {
+                AddReward(factorgoal / (rb.angularVelocity.magnitude * 4) + 1);
+                rewardgoalreached.Add((factorgoal / (rb.angularVelocity.magnitude * 4) + 1));
+            }
+
+            //Belohung für die möglichst waagerechte Lage der Drohne
+            if (Vector3.Dot(transform.up, new Vector3(0, 1, 0)) > 0.5f)
+            {
+                AddReward(factorgoal / ((Vector3.Dot(transform.up, new Vector3(0, -1, 0)) + 2) * 6));
+                rewardgoalreached.Add((factorgoal / ((Vector3.Dot(transform.up, new Vector3(0, -1, 0)) + 2) * 6)));
+            }
+
+            //Belohung fürs erreichen des Ziels
+            AddReward(factorgoal * goalcounter);
+            rewardgoalreached.Add(factorgoal * goalcounter);
+
+            //Boden grün färben
+            floor.material = _winMaterial;
+
+
+            //gesamtbelohung für das jeweilig erreichte Ziel speichern, sollte fürs Training auskommentiert werden und dient zur Einschätzung
+            //des Trainingfortschrittes.
+            rewards[goalcounter].Add(GetCumulativeReward());
+            goalController.SetGoal();
         }
+        //nach dem 10. Ziel die Episode neu starten
+        if (goalcounter >= 10)
+            EndEpisode();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-
-
-        if (Time.time - startTime >= 0.01f)
+        //Bestrafung für die Kollision mit der Wand, Boden oder Decke
+        AddReward(-10);
+        floor.material = _crashLooseMaterial;
+        
+        //im Training wird die Position des Ziels geändert nach 100 mal verfehlen dieses
+        resetGoalCounter++;
+        if (resetGoalCounter > 100)
         {
-
-
-          //  print("wrong Goal");
-            AddReward(-10);
-            floor.material = _crashLooseMaterial;
-            resetGoalCounter++;
-            if (resetGoalCounter > 100)
-            {
-                resetGoalCounter = 0;
-                goalController.SetGoal();
-            }
-
-
-            if (goalcounter == 0)
-            {
-                 rewards[goalcounter].Add(GetCumulativeReward());
-                print("Goalcounter:" + goalcounter);
-            }
-            List<float> averages = new List<float>();
-            foreach (List<float> row in rewards)
-            {
-                float sum = 0.0f;
-                foreach (float value in row)
-                {
-                    sum += value;
-                }
-                float average = sum / row.Count;
-                averages.Add(average);
-            }
-
-            // Display the averages
-            string output = "Averages: ";
-            foreach (float average in averages)
-            {
-                output = output + average + "; ";
-            }
-            //  print(output);
-
-
-            String goalstring = "";
-            foreach(float goal in rewardgoalreached)
-            {
-                goalstring += ", " + goal;
-
-            }
-            //print(GetCumulativeReward());
-            print("Reward: Distance: " + rewarddistance + ", Goal: " + rewardrotationgoal + ", up: " + rewardrotationforward + ", velocity" + rewardvelocity + ", angvelocity: " + rewardangvelocity + ", goalreached: " + goalstring);
-            rewarddistance = 0;
-            rewardrotationgoal = 0;
-            rewardrotationforward = 0;
-            rewardvelocity = 0;
-            rewardangvelocity = 0;
-            rewardtime = 0;
-            rewardgoalreached = new List<float>();
-            EndEpisode();
+            resetGoalCounter = 0;
+            goalController.SetGoal();
         }
+
+        if (goalcounter == 0)
+        {
+            //gesamtbelohung wenn kein Ziel erreicht wurde
+            rewards[goalcounter].Add(GetCumulativeReward());
+        }
+
+        //DUrchschnitt für 0,1,2,... erreichte Ziele berechnen. 
+        List<float> averages = new List<float>();
+        foreach (List<float> row in rewards)
+        {
+            float sum = 0.0f;
+            foreach (float value in row)
+            {
+                sum += value;
+            }
+            float average = sum / row.Count;
+            averages.Add(average);
+        }
+
+        // Durchschnitt für 0,1,2,... erreichte Ziele ausgeben
+        //sollte fürs training auskommentiert werden und dient zur Einschätzung des Trainingfortschrittes.
+        string output = "Averages: ";
+        foreach (float average in averages)
+        {
+            output = output + average + "; ";
+        }
+        print(output);
+
+
+        String goalstring = "";
+        foreach (float goal in rewardgoalreached)
+        {
+            goalstring += ", " + goal;
+
+        }
+
+        //ausgeben der jeweiligen Belohungen für die verschiedenen Bewertungsmetriken
+        //sollte fürs training auskommentiert werden und dient zur Einschätzung des Trainingfortschrittes.
+        print("Reward: Distance: " + rewarddistance + ", Goal: " + rewardrotationgoal + ", up: " + rewardrotationforward + ", velocity" + rewardvelocity + ", angvelocity: " + rewardangvelocity + ", goalreached: " + goalstring);
+        rewarddistance = 0;
+        rewardrotationgoal = 0;
+        rewardrotationforward = 0;
+        rewardvelocity = 0;
+        rewardangvelocity = 0;
+        rewardtime = 0;
+        rewardgoalreached = new List<float>();
+        EndEpisode();
     }
+}
 }

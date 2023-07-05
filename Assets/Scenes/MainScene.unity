@@ -635,7 +635,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 1000
+  MaxStep: 100000
   goalController: {fileID: 1992710834}
   floor: {fileID: 1096543029}
   drone: {fileID: 630538752}
@@ -662,7 +662,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: 12464360ed7bbe44a995db3f637eed1a, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: Fly
@@ -1543,7 +1543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b273c8cd7cf1d644dbd17e5b930b94c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 3, y: 4}
+  size: {x: 1, y: 1}
   spacing: 100
   prefab: {fileID: 1848078216}
 --- !u!1 &1783338871
